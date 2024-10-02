@@ -18,7 +18,6 @@ public interface MessageRepository extends JpaRepository<Messages, Long> {
 	List<Messages> findBySenderAndSeenByR (Users sender, int seenByR);
 	
 	//2. 해당 방에서 sender가 내가 아닌 메세지를 찾아야 함.
-	//@Query("select e from Expense e where e.useDate = :useDate order by e.writer.name desc")
 	@Query("select m from Messages m where m.chatRoom = :chatRoom and m.sender <> :sender and m.seenByR = 0")
 	List<Messages> findByNotSender(@Param("chatRoom") ChatRooms chatRoom, @Param("sender") Users sender);
 	

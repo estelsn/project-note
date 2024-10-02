@@ -125,7 +125,7 @@ public class MessageService {
 	public List<URMessageData> getUnreadUser(Users user) {
 		List<URMessageData> urMsgDataList = new ArrayList<>();
 		List<ChatRooms> crListByUser = this.crRepo.allRoomList(user);
-		String userList = null;
+		
 		int count = 0;
 		for(ChatRooms cr : crListByUser) {
 			for(Messages m : cr.getMessages()) {
