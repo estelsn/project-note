@@ -86,6 +86,7 @@ public class FileService {
 		}
 		return file;
 	}
+	//업데이트
 	public Files updateFile(Files _file , MultipartFile multipartFile) {
 		Files file = findByFiles(_file.getFileId());
 		if(multipartFile==null||multipartFile.isEmpty()) {

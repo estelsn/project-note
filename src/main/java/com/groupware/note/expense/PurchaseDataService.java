@@ -50,7 +50,13 @@ public class PurchaseDataService {
 		
 		if(type.equals("group")) {	
 			List<Cart> cList = this.cRepo.findByStatusAndType("complete", type);
-			List<Departments> dList = this.cRepo.findDepByStatusAndType("complete", type);
+			List<Departments> _dList = this.cRepo.findDepByStatusAndType("complete", type);
+			List<Departments> dList = new ArrayList<>();
+			for(Departments d : _dList) {
+			   if(!dList.contains(d)) {
+			      dList.add(d);
+			   } 
+			}
 			
 			cList.sort((o1, o2)-> o1.getAddDate().compareTo(o2.getAddDate()));
 			for(int i=LocalDateTime.now().getYear(); i>=2010; i--) {
@@ -59,7 +65,7 @@ public class PurchaseDataService {
 					int price = 0;
 					for(Cart c : cList) {
 						if(d.equals(c.getUser().getPosition().getDepartment()) && c.getAddDate().getYear()==i && c.getAddDate().getMonthValue()==j) {
-							price = price + c.getPoint();
+							price = price + (c.getPoint()*c.getQuantity() );
 						}
 					}
 					if(price!=0) {
@@ -104,7 +110,14 @@ public class PurchaseDataService {
 		} else {
 			
 		List<Cart> cList = this.cRepo.findByStatusAndType("complete", type);
-		List<Users> cuList = this.cRepo.findUserByStatusAndType("complete", type);
+		List<Users> _cuList = this.cRepo.findUserByStatusAndType("complete", type);
+		List<Users> cuList = new ArrayList<>();
+		for(Users u : _cuList) {
+			if(!cuList.contains(u)) {
+				cuList.add(u);
+			}
+		}
+		
 		cList.sort((o1, o2) -> o1.getAddDate().compareTo(o2.getAddDate()));
 			for(int i=LocalDateTime.now().getYear(); i>=2010; i--) {
 			for(int j=12; j>=1; j--) {
@@ -112,7 +125,7 @@ public class PurchaseDataService {
 					int price = 0;
 					for(Cart c : cList) {
 						if(u.equals(c.getUser()) && c.getAddDate().getYear()==i && c.getAddDate().getMonthValue()==j) {
-							price = price + c.getPoint();
+							price = price + (c.getPoint()*c.getQuantity());
 						}
 					}
 					if(price!=0) {
@@ -207,6 +220,7 @@ public class PurchaseDataService {
 	    	list = this.cRepo.findByStatusAndTypeAndUserAndAddDateBetween("complete", purchaseType, user, startDate, endDate);
 	    	String details = user.getPosition().getPositionName() + "/" +user.getPosition().getDepartment().getDepartmentName();
 	    	model.addAttribute("details", details);
+	    	
 	    } else if(purchaseType.equals("group")) {
 	    	Departments dep = this.dRepo.findById(id).get();
 	    	name = dep.getDepartmentName();
